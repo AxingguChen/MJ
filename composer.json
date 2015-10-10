@@ -10,8 +10,16 @@
 		"irc": "irc://irc.freenode.net/codeigniter",
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
+  "repositories": [
+	{
+	  "type": "composer",
+	  "url": "https://packages.zendframework.com/"
+	}
+  ],
 	"require": {
-		"php": ">=5.2.4"
+		"php": ">=5.2.4",
+	    "zendframework/zend-permissions-acl": "*"
+
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "1.1.*"

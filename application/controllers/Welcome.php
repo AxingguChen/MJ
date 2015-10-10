@@ -1,5 +1,8 @@
 <?php
+use Zend\Permissions\Acl\Acl;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 
 class Welcome extends CI_Controller {
 
@@ -20,6 +23,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		$acl = new Acl();
 		$this->load->view('welcome_message');
 	}
 }
