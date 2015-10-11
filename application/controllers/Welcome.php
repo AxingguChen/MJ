@@ -23,7 +23,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$acl = new Acl();
+		//$acl = new Acl();
 		$this->load->view('welcome_message');
 	}
 }
