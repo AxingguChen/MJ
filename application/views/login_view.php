@@ -21,7 +21,7 @@
                 <input type="text" name="email" id="email"
                        placeholder="email address" class="form-control">
             </div>
-            <div class="input-text-field col-md-1">Passowrd:</div>
+            <div class="input-text-field col-md-1">Password:</div>
             <div class="input-field col-md-4">
                 <input type="password" name="password" id="password"
                        placeholder="password" class="form-control">

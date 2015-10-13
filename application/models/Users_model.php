@@ -1,16 +1,51 @@
 <?php
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole;
+
 /**
  * Created by PhpStorm.
  * User: jackie
  * Date: 10/11/2015
  * Time: 3:12 PM
  * model for users table
+ * @property Acl acl
  */
 
 
 class Users_model extends CI_Model {
 
+    function __construct() {
+        if (!property_exists('Users_model', 'acl') || $this->acl == null) {
+            $this->acl = new Acl();
+        }
+    }
 
+    public function can_do_it($resource) {
+        return $this->acl->isAllowed('this_user',$resource);
+    }
+
+    private function set_permissions($id) {
+        $roles = $this->db->from('groups')->where('groups_id',$id)->get()->result();
+        $user_role = null;
+        foreach($roles as $role) {
+            $this->acl->addRole($role->name);
+            $user_role = $role->name;
+        }
+        $this->acl->addRole('this_user', array($user_role));
+        $resources = $this->db->list_fields('acl');
+        $resources = array_slice($resources,2);
+        $permissions = $this->db->from('acl')
+                                ->where('acl_groups_id',$id)
+                                ->get()->row_array();
+        foreach($resources as $resource) {
+            $this->acl->addResource($resource);
+            if ($permissions[$resource] == 1) {
+                $this->acl->allow($user_role, $resource);
+            } else {
+                $this->acl->deny($user_role, $resource);
+            }
+        }
+    }
 
     /**
      * select * from users
@@ -34,19 +69,20 @@ class Users_model extends CI_Model {
      *
      * @access public
      * @param string $email
-     * @param stting $password
+     * @param string $password
      * @return login user records
      */
     function login($email, $password) {
-        $this->db->select ( 'users_id, email, password' );
+        $this->db->select ( 'users_id, users_groups_id, email, password' );
         $this->db->from ( 'users' );
         $this->db->where ( 'email', $email );
         $this->db->where ( 'password', sha1 ( $password ) );
         // $this -> db -> limit(1);
 
-        $query = $this->db->get ();
+        $query = $this->db->get();
 
         if ($query->num_rows () == 1) {
+            $this->set_permissions($query->row()->users_groups_id);
             return $query->result ();
         } else {
             return false;

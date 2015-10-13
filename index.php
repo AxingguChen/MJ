@@ -35,7 +35,7 @@
  * @since	Version 1.0.0
  * @filesource
  */
-
+include "./vendor/autoload.php";
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -290,4 +290,4 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
-include "./vendor/autoload.php";
+

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: jackie
@@ -12,10 +13,13 @@ class Verification extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('users_model','',TRUE);
+        $this->load->library('form_validation');
+        $this->load->helper('form');
     }
 
     function login()
     {
+
         $this->load->view('login_view');
     }
 
@@ -26,11 +30,9 @@ class Verification extends CI_Controller {
 
     public function verify(){
         //This method will have the credentials validation
-        $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|callback_check_database');
-
+        $this->form_validation->set_rules('email', 'Email', 'trim|required');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|callback_check_database');
         if($this->form_validation->run() == FALSE)
         {
             //Field validation failed.  User redirected to login page
@@ -40,7 +42,18 @@ class Verification extends CI_Controller {
         {
             //Go to private area
             //redirect('users/user_profile', 'refresh');
-            $this->load->view('welcome_message');
+
+            /* USE CASE FOR ACL SYSTEM*/
+            $data = array('data' => array(
+                'acl_view' => $this->users_model->can_do_it('acl_view'),
+                'acl_update_profile' => $this->users_model->can_do_it('acl_update_profile'),
+                'acl_view_profile' => $this->users_model->can_do_it('acl_view_profile'),
+                'acl_create_project' => $this->users_model->can_do_it('acl_create_project'),
+                'acl_update_project' => $this->users_model->can_do_it('acl_update_project'),
+                'acl_update_check' => $this->users_model->can_do_it('acl_update_check'),
+                'acl_update_acl' => $this->users_model->can_do_it('acl_update_acl')
+            ));
+            $this->load->view('welcome_message',$data);
         }
     }
 
@@ -51,7 +64,6 @@ class Verification extends CI_Controller {
 
         //query the database
         $result = $this->users_model->login($email, $password);
-
         if($result)
         {
             //session
@@ -64,7 +76,7 @@ class Verification extends CI_Controller {
                 );
                 $this->session->set_userdata('logged_in', $sess_array);
             }
-            return TRUE;
+            return true;
         }
         else
         {
