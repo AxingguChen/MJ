@@ -46,11 +46,11 @@ class Verification extends CI_Controller {
             /* USE CASE FOR ACL SYSTEM*/
             $data = array('data' => array(
                 'acl_view' => $this->users_model->can_do_it('acl_view'),
-                'acl_update_profile' => $this->users_model->can_do_it('acl_update_profile'),
-                'acl_view_profile' => $this->users_model->can_do_it('acl_view_profile'),
-                'acl_create_project' => $this->users_model->can_do_it('acl_create_project'),
-                'acl_update_project' => $this->users_model->can_do_it('acl_update_project'),
-                'acl_update_check' => $this->users_model->can_do_it('acl_update_check'),
+                'acl_update_profile' => $this->users_model->can_do_it('acl_update_user'),
+                'acl_view_profile' => $this->users_model->can_do_it('acl_view_user'),
+                'acl_create_project' => $this->users_model->can_do_it('acl_update_designer'),
+                'acl_update_project' => $this->users_model->can_do_it('acl_update_designer'),
+                'acl_update_check' => $this->users_model->can_do_it('acl_update_checker'),
                 'acl_update_acl' => $this->users_model->can_do_it('acl_update_acl')
             ));
             $this->load->view('welcome_message',$data);

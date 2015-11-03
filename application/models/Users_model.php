@@ -13,7 +13,7 @@ use Zend\Permissions\Acl\Role\GenericRole;
 
 
 class Users_model extends CI_Model {
-
+    private $TABLENAME = 'users';
     function __construct() {
         if (!property_exists('Users_model', 'acl') || $this->acl == null) {
             $this->acl = new Acl();
@@ -55,7 +55,7 @@ class Users_model extends CI_Model {
      */
     function get_all() {
         // $this -> db -> select('*');
-        $this->db->from ( 'users' );
+        $this->db->from ( $this->TABLENAME );
         // $this -> db -> limit(1);
 
         $query = $this->db->get ();
@@ -74,7 +74,7 @@ class Users_model extends CI_Model {
      */
     function login($email, $password) {
         $this->db->select ( 'users_id, users_groups_id, email, password' );
-        $this->db->from ( 'users' );
+        $this->db->from ( $this->TABLENAME );
         $this->db->where ( 'email', $email );
         $this->db->where ( 'password', sha1 ( $password ) );
         // $this -> db -> limit(1);
@@ -103,7 +103,7 @@ class Users_model extends CI_Model {
             'users_groups_id' => 12,
             'password' => sha1 ( $this->input->post ( 'password' ) )
         );
-        $this->db->insert ( 'users', $data );
+        $this->db->insert ( $this->TABLENAME, $data );
     }
 
     /**
@@ -116,7 +116,7 @@ class Users_model extends CI_Model {
      */
     function getByEmail($email) {
         // $this -> db -> select('id, email');
-        $this->db->from ( 'users' );
+        $this->db->from ( $this->TABLENAME );
         $this->db->where ( 'email', $email );
         // $this -> db -> limit(1);
 
@@ -139,7 +139,7 @@ class Users_model extends CI_Model {
      */
     function getById($id) {
         // $this -> db -> select('id, email');
-        $this->db->from ( 'users' );
+        $this->db->from ( $this->TABLENAME );
         $this->db->where ( 'users_id', $id );
         // $this -> db -> limit(1);
 
@@ -162,7 +162,7 @@ class Users_model extends CI_Model {
     function update_profile($id, $data) {
 
         $this->db->where('users_id', $id);
-        $this->db->update('users', $data);
+        $this->db->update($this->TABLENAME, $data);
 
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE)
